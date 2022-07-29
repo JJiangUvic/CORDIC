@@ -6,6 +6,7 @@ int SHIFTBITS = 12;
 int CONSTANT = 2487;       // 0.6072529351031395
 double FIXEDBASE = 4096.0; // 2^12
 
+// comment
 int arctan_angle[] = {
     184320, // 45.0
     108810, // 26.56505117707799

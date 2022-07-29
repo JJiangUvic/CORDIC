@@ -6,7 +6,7 @@ int SHIFTBITS = 12;
 int CONSTANT = 2487;       // 0.6072529351031395
 double FIXEDBASE = 4096.0; // 2^12
 
-// comment
+// pre store the arctan value and form a check list
 int arctan_angle[] = {
     184320, // 45.0
     108810, // 26.56505117707799
@@ -46,6 +46,7 @@ double fixedToFloat(int fixed)
     return fixed / FIXEDBASE;
 }
 
+// determine the situation based on
 int ModeDecision(MODE mode, int y, int angle)
 {
     if (mode == ARCTAN && y < 0)

@@ -55,12 +55,12 @@ int ModeDecision(MODE mode, int y, int angle)
 
 double cordic(double x, double y, double angle, MODE mode)
 {
-    int temp_a, temp_b, a, b, result, theta;
-
+    register temp_a, temp_b, a, b, theta,i;
+    int result;
     theta = floatToFixed(angle);
     a = floatToFixed(x);
     b = floatToFixed(y);
-    int i = 0;
+    i = 0;
     for (; i < list_size; i++)
     {
         if (ModeDecision(mode, b, theta))

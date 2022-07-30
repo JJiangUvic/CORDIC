@@ -3,30 +3,28 @@
 
 int list_size = 16;
 int SHIFTBITS = 12;
-int CONSTANT = 2487;       // 0.6072529351031395
-double FIXEDBASE = 4096.0; // 2^12
+int CONSTANT = 2487;
+double FIXEDBASE = 4096.0;
 
-// pre store the arctan value and form a check list
-int arctan_angle[] = {
-    184320, // 45.0
-    108810, // 26.56505117707799
-    57492,  // 14.036243467926479
-    29184,  // 7.125016348901798
-    14648,  // 3.576334374997351
-    7331,   // 1.7899106082460694
-    3666,   // 0.8951737102110744
-    1833,   // 0.4476141708605531
-    916,    // 0.22381050036853808
-    458,    // 0.1119056770662069
-    229,    // 0.055952891893803675
-    114,    // 0.027976452617003676
-    57,     // 0.013988227142265016
-    28,     // 0.006994113675352919
-    14,     // 0.003497056850704011
-    7,      // 0.0017485284269804495
+int arctan_engle_2[] = {
+    184320, //
+    108810,
+    57492,
+    29184,
+    14648,
+    7331,
+    3666,
+    1833,
+    916,
+    458,
+    229,
+    114,
+    57,
+    28,
+    14,
+    7,
 };
 
-// define the indictor for different mode of cordic
 typedef enum MODE
 {
     COS,
@@ -34,19 +32,16 @@ typedef enum MODE
     ARCTAN
 } MODE;
 
-// Transfer float to fixed
-int floatToFixed(double flt)
+int float_to_fixed(double flt)
 {
     return (int)(flt * FIXEDBASE);
 }
 
-// Transfer fixed to float
-double fixedToFloat(int fixed)
+double fixed_to_float(int fixed)
 {
     return fixed / FIXEDBASE;
 }
 
-// determine the situation based on
 int ModeDecision(MODE mode, int y, int angle)
 {
     if (mode == ARCTAN && y < 0)
@@ -59,40 +54,40 @@ int ModeDecision(MODE mode, int y, int angle)
 
 double cordic(double x, double y, double angle, MODE mode)
 {
-    int temp_a, temp_b, a, b, result, theta;
+    int temp_a, temp_b, a, b, result;
+    int theta = float_to_fixed(angle);
 
-    theta = floatToFixed(angle);
-    a = floatToFixed(x);
-    b = floatToFixed(y);
-
-    for (int i = 0; i < list_size; i++)
+    a = float_to_fixed(x);
+    b = float_to_fixed(y);
+    int i = 0;
+    for (; i < list_size; i++)
     {
         if (ModeDecision(mode, b, theta))
         {
             temp_a = a - (b >> i);
             temp_b = b + (a >> i);
-            theta = theta - arctan_angle[i];
+            theta = theta - arctan_engle_2[i];
         }
         else
         {
             temp_a = a + (b >> i);
             temp_b = b - (a >> i);
-            theta = theta + arctan_angle[i];
+            theta = theta + arctan_engle_2[i];
         }
         a = temp_a;
         b = temp_b;
     }
 
     if (mode == SIN)
-        result = (b * CONSTANT) >> SHIFTBITS;
+        result = (b * CONSTANT) >> 12;
 
     else if (mode == COS)
-        result = (a * CONSTANT) >> SHIFTBITS;
+        result = (a * CONSTANT) >> 12;
 
     else
         result = theta;
 
-    return fixedToFloat(result);
+    return fixed_to_float(result);
 }
 
 int main(int argc, char const *argv[])

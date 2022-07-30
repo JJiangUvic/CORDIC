@@ -47,12 +47,8 @@ double fixedToFloat(int fixed)
 // determine the situation based on
 int ModeDecision(MODE mode, int y, int angle)
 {
-    if (mode == ARCTAN && y < 0)
-        return 1;
-    else if (mode != ARCTAN && angle > 0)
-        return 1;
-    else
-        return 0;
+    return (mode == ARCTAN) ? (y<0 ? 1:0):(angle>0 ? 1:0);
+
 }
 
 double cordic(double x, double y, double angle, MODE mode)
@@ -63,8 +59,8 @@ double cordic(double x, double y, double angle, MODE mode)
     theta = floatToFixed(angle);
     a = floatToFixed(x);
     b = floatToFixed(y);
-
-    for (int i = 0; i < list_size; i++)
+    int i = 0;
+    for (; i < list_size; i++)
     {
         if (ModeDecision(mode, b, theta))
         {

@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int list_size = 16;
-int SHIFTBITS = 12;
-int CONSTANT = 2487;       // 0.6072529351031395
+short list_size = 16;
 double FIXEDBASE = 4096.0; // 2^12
 
 // pre store the arctan value and form a check list
@@ -49,12 +47,17 @@ double fixedToFloat(int fixed)
 // determine the situation based on
 int ModeDecision(MODE mode, int y, int angle)
 {
-    return (mode == ARCTAN) ? (y<0 ? 1:0):(angle>0 ? 1:0);
-
+    if (mode == ARCTAN && y < 0)
+        return 1;
+    else if (mode != ARCTAN && angle > 0)
+        return 1;
+    else
+        return 0;
 }
 
 double cordic(double x, double y, double angle, MODE mode)
 {
+
     int temp_a, temp_b, a, b, result, theta;
 
     theta = floatToFixed(angle);
@@ -79,11 +82,20 @@ double cordic(double x, double y, double angle, MODE mode)
         b = temp_b;
     }
 
+    //global_vals[0]//short SHIFTBITS = 12;
+    //global_vals[1]//short CONSTANT = 2487;
+
+    long int pre_load_val;
+    unsigned short int *global_vals;
+    global_vals =(unsigned short int *)(&pre_load_val);
+
+    pre_load_val=0x09B7000c;
+
     if (mode == SIN)
-        result = (b * CONSTANT) >> SHIFTBITS;
+        result = (b * global_vals[1]) >> global_vals[0];
 
     else if (mode == COS)
-        result = (a * CONSTANT) >> SHIFTBITS;
+        result = (a * global_vals[1]) >> global_vals[0];
 
     else
         result = theta;

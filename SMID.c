@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <emmintrin.h>
+//#include <time.h>
+#include <sys/time.h>
+
 
 int list_size = 16;
 int SHIFTBITS = 12;
@@ -61,10 +65,27 @@ double cordic(double x, double y, double angle, MODE mode)
     a = floatToFixed(x);
     b = floatToFixed(y);
 
-    for (int i = 0; i < list_size; i++)
+    int i = 0;
+    for (; i < list_size; i++)
     {
         if (ModeDecision(mode, b, theta))
         {
+//            __m128i ma = _mm_loadu_si128((__m128i*) &a);
+//            __m128i mb = _mm_loadu_si128((__m128i*) &b);
+//
+//            ma = _mm_add_epi32(ma, mb);
+            __m128i ma = _mm_loadu_si128((__m128i*) &a);
+            __m128i mb = _mm_loadu_si128((__m128i*) &b);
+            __m128i mtmp_a = _mm_loadu_si128((__m128i*) &temp_a);
+            __m128i mtmp_b = _mm_loadu_si128((__m128i*) &temp_b);
+
+//            _mm_srli_si128(ma, i);
+            _mm_srli_si128(mb, i);
+
+            mtmp_a = _mm_add_epi32(ma,_mm_srli_si128(ma, i));
+
+            ma = _mm_add_epi32(ma, mb);
+
             temp_a = a - (b >> i);
             temp_b = b + (a >> i);
             theta = theta - arctan_angle[i];
@@ -93,6 +114,7 @@ double cordic(double x, double y, double angle, MODE mode)
 
 int main(int argc, char const *argv[])
 {
+
     double test_sin = cordic(1, 0, 70, SIN);
     printf("sin 70 = %f\n", test_sin);
 

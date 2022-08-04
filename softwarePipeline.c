@@ -55,26 +55,28 @@ int ModeDecision(MODE mode, int y, int angle)
 
 double cordic(double x, double y, double angle, MODE mode)
 {
-    register temp_a, temp_b, a, b, theta,i;
+    register temp_a, temp_b, a, b, theta, i ,ang_tmp ;
     int result;
     theta = floatToFixed(angle);
     a = floatToFixed(x);
     b = floatToFixed(y);
     i = 0;
+    ang_tmp = arctan_angle[0];
     for (; i < list_size; i++)
     {
         if (ModeDecision(mode, b, theta))
         {
             temp_a = a - (b >> i);
             temp_b = b + (a >> i);
-            theta = theta - arctan_angle[i];
+            theta = theta - ang_tmp;
         }
         else
         {
             temp_a = a + (b >> i);
             temp_b = b - (a >> i);
-            theta = theta + arctan_angle[i];
+            theta = theta + ang_tmp;
         }
+        ang_tmp = arctan_angle[i+1];
         a = temp_a;
         b = temp_b;
     }

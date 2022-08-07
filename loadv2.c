@@ -7,12 +7,12 @@ int CONSTANT = 2487;       // 0.6072529351031395
 double FIXEDBASE = 4096.0; // 2^12
 
 // pre store the arctan value and form a check list
-volatile int arctan_angle[] = {
+int arctan_angle[] = {
     184320, // 45.0
     108810, // 26.56505117707799
     57492,  // 14.036243467926479
 };
-volatile short int arctan_angle_short[]={
+short int arctan_angle_short[]={
     0,
     0,
     0,

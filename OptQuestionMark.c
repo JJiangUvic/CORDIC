@@ -53,6 +53,14 @@ int ModeDecision(MODE mode, int y, int angle)
 
 }
 
+/*
+    CORDIC
+    Input double x,y, theta, and mode
+    Step 1: convert the double x,y to 12 bits Fixed-point number
+    Step 2: Calculate the output
+    Step 3: Choose the output value based on the mode
+    Step 4: Convert the fixed-point output into float(double)
+*/
 double cordic(double x, double y, double angle, MODE mode)
 {
     int temp_a, temp_b, a, b, result, theta;

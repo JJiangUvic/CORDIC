@@ -106,14 +106,12 @@ double cordic(double x, double y, double angle, char mode)//data dependent, cann
             temp_a = a - (b >> i);
             temp_b = b + (a >> i);
             theta = theta - ang_tmp;
-            //theta=theta-arctan_angle_short[i];
         }
         else
         {
             temp_a = a + (b >> i);
             temp_b = b - (a >> i);
             theta = theta + ang_tmp;
-            //theta=theta+arctan_angle_short[i];
         }
         ang_tmp = arctan_angle_short[k+1];
         a = temp_a;
